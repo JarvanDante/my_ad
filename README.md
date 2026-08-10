@@ -1,2 +1,4 @@
-# my_ad
-广告中台
+# GoFrame Template For SingleRepo
+
+Quick Start: 
+- https://goframe.org/quick
