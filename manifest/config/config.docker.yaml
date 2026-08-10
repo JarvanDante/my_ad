@@ -1,0 +1,15 @@
+server:
+  address:     ":8006"
+  openapiPath: "/api.json"
+  swaggerPath: "/swagger"
+
+logger:
+  level: "all"
+  stdout: true
+
+database:
+  default:
+    link: "pgsql:postgres:654321@tcp(postgres:5432)/my_ad?sslmode=disable"
+
+security:
+  admin_token: "488ac147a8b24d2b0541b24f4fdfb5f8b10c20129f6b46fcce6d2091094e872a"
