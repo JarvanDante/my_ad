@@ -12,8 +12,8 @@ import (
 )
 
 type Service struct {
-	repo      *dao.CampaignRepo
-	slots     *dao.SlotRepo
+	repo     *dao.CampaignRepo
+	slots    *dao.SlotRepo
 	creatives *dao.CreativeRepo
 }
 
