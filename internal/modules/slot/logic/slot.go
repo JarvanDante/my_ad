@@ -32,9 +32,11 @@ func (s *Service) Create(ctx context.Context, in *dao.Slot) (int64, error) {
 	if exist != nil {
 		return 0, gerror.NewCode(errcode.CodeBadRequest, "广告位 code 已存在")
 	}
-	if in.SlotType == "" {
-		in.SlotType = "banner"
+	t, err := normalizeSlotType(in.SlotType)
+	if err != nil {
+		return 0, err
 	}
+	in.SlotType = t
 	if in.Status != 0 && in.Status != 1 {
 		in.Status = 1
 	}
@@ -56,10 +58,28 @@ func (s *Service) Update(ctx context.Context, in *dao.Slot) error {
 	if _, err := s.Get(ctx, in.Id); err != nil {
 		return err
 	}
-	if in.SlotType == "" {
-		in.SlotType = "banner"
+	t, err := normalizeSlotType(in.SlotType)
+	if err != nil {
+		return err
 	}
+	in.SlotType = t
 	return s.repo.Update(ctx, in)
+}
+
+var allowedSlotTypes = map[string]struct{}{
+	"banner": {}, "splash": {}, "feed": {}, "player": {},
+	"popup": {}, "float": {}, "icon": {},
+}
+
+func normalizeSlotType(raw string) (string, error) {
+	t := strings.ToLower(strings.TrimSpace(raw))
+	if t == "" {
+		return "banner", nil
+	}
+	if _, ok := allowedSlotTypes[t]; !ok {
+		return "", gerror.NewCode(errcode.CodeBadRequest, "广告位类型非法")
+	}
+	return t, nil
 }
 
 func (s *Service) Delete(ctx context.Context, id int64) error {
